@@ -1,3 +1,5 @@
+#载入ggplot2包
+library("ggplot2")
 rm(list=ls())
 ##########Fischer图解#################
 #A[i,1]-标注   A[i,2]-旋回顶深    A[i,3]-旋回底深  A[i,4]-符号  A[i,5]-旋回厚度	A[i,6]-偏移	A[i,7]-累积偏移	A[i,8]-旋回数 A[i,9]-层位
@@ -38,8 +40,6 @@ for (i in 1:sumlayer){
 colnames(A)<-c("标注","旋回顶深","旋回底深","符号","旋回厚度","偏移","累积偏移","旋回数","层位")
 #将数据框Ａ写入文件
 write.csv(A,file="Fischer.csv")
-#载入ggplot2包
-library("ggplot2")
 #计算各个层位顶底
 sep<-layer
 sep[1]<-sumcycle+1-sep[1]
@@ -48,7 +48,7 @@ colnames(layer)<-c("顶","底","层位")
 #绘图并另存为png文件
 p1<-ggplot(A,aes(旋回数,累积偏移))
 p2<-p1+geom_point(aes(colour=层位))+geom_smooth(method="loess",span=0.1,se=TRUE)+labs(title="Fischer图解")+xlab("时间")
-p3<-p2+geom_vline(x=sep[2:sumlayer,1],lty=2)
+p3<-p2+geom_vline(xintercept=sep[2:sumlayer,1],lty=2)
 for (i in 1:sumlayer){
   p3<-p3+geom_text(x=mean(as.numeric(sep[i,1:2])),y=min(A[7]),hjust=0.5,vjust=1,label=sep[i,3],size=4)
 }

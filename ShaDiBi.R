@@ -1,3 +1,5 @@
+#载入ggplot2包
+library("ggplot2")
 rm(list=ls())
 ###########砂地比##############
 #A[j,1]-标注   A[j,2]-旋回顶深    A[j,3]-旋回底深  A[j,4]-符号  A[j,5]-旋回厚度  A[j,6]-砂层厚度	A[j,7]-负砂地比	  A[j,8]-旋回数 A[i,9]-层位
@@ -47,8 +49,6 @@ for (i in 1:sumlayer){
 colnames(A)<-c("标注","顶深","底深","符号","旋回厚度","砂层厚度","砂地比","旋回数","层位")
 #将数据框Ａ写入文件
 write.csv(A,file="ShaDiBi.csv")
-#载入ggplot2包
-library("ggplot2")
 #计算各个层位顶底
 sep<-layer
 sep[1]<-sumcycle+1-sep[1]
@@ -57,7 +57,7 @@ colnames(layer)<-c("顶","底","层位")
 #绘图并另存为png文件
 p1<-ggplot(A,aes(旋回数,砂地比))
 p2<-p1+geom_point(aes(colour=层位))+geom_smooth(method="loess",span=0.1,se=TRUE)+labs(title="砂地比变化曲线")+xlab("时间")
-p3<-p2+geom_vline(x=sep[2:sumlayer,1],lty=2)
+p3<-p2+geom_vline(xintercept=sep[2:sumlayer,1],lty=2)
 for (i in 1:sumlayer){
   p3<-p3+geom_text(x=mean(as.numeric(sep[i,1:2])),y=min(A[7]),hjust=0.5,vjust=1,label=sep[i,3],size=4)
 }
